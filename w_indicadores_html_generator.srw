@@ -39,13 +39,13 @@ end forward
 global type w_indicadores_html_generator from window
 integer width = 3200
 integer height = 2100
-string title = "Gerador de Indicadores HTML"
+string title = "Gerador de Indicadores RECOF"
 boolean controlmenu = true
 boolean minbox = true
 boolean maxbox = true
 boolean resizable = true
-windowtype windowtype = main!
 long backcolor = 67108864
+boolean center = true
 ddlb_funcao ddlb_funcao
 sle_periodo_ini sle_periodo_ini
 sle_periodo_fim sle_periodo_fim
@@ -237,10 +237,9 @@ int li_FileID
 longlong lRet
 
 // Obter diretório temporário
-ls_temp_path = GetEnvironment("TEMP")
-IF IsNull(ls_temp_path) OR ls_temp_path = "" THEN
-    ls_temp_path = GetEnvironment("TMP")
-END IF
+uofile uof
+uof = create uofile
+ls_temp_path = uof.gettempdir()
 IF IsNull(ls_temp_path) OR ls_temp_path = "" THEN
     ls_temp_path = "C:\Temp"
 END IF
@@ -269,7 +268,10 @@ END IF
 FileClose(li_FileID)
 
 // Abrir arquivo no navegador padrão
-Run(is_temp_file)
+fx_pausa(0.1)
+uoF.executar(is_temp_file)
+fx_pausa(5)
+destroy uoF
 
 RETURN 1
 end function
@@ -279,7 +281,7 @@ string ls_periodo_ini, ls_periodo_fim, ls_cnpj_raiz
 string ls_top_empresas, ls_top_pares
 
 // Verificar se função foi selecionada
-IF ddlb_funcao.text = "" OR ddlb_funcao.SelectedIndex() <= 0 THEN
+IF ddlb_funcao.text = "" THEN
     MessageBox("Validação", "Por favor, selecione uma função geradora de indicador.", Information!)
     ddlb_funcao.SetFocus()
     RETURN FALSE
@@ -552,7 +554,7 @@ borderstyle borderstyle = stylelowered!
 end type
 
 type sle_cnpj_raiz from singlelineedit within w_indicadores_html_generator
-integer x = 1590
+integer x = 1591
 integer y = 720
 integer width = 640
 integer height = 92
@@ -570,7 +572,7 @@ end type
 type sle_top_empresas from singlelineedit within w_indicadores_html_generator
 integer x = 110
 integer y = 980
-integer width = 400
+integer width = 402
 integer height = 92
 integer taborder = 50
 integer textsize = -10
@@ -584,9 +586,9 @@ borderstyle borderstyle = stylelowered!
 end type
 
 type sle_top_pares from singlelineedit within w_indicadores_html_generator
-integer x = 610
+integer x = 608
 integer y = 980
-integer width = 400
+integer width = 402
 integer height = 92
 integer taborder = 60
 integer textsize = -10
@@ -647,7 +649,7 @@ end event
 type st_funcao from statictext within w_indicadores_html_generator
 integer x = 110
 integer y = 72
-integer width = 650
+integer width = 649
 integer height = 64
 integer textsize = -10
 integer weight = 700
@@ -696,7 +698,7 @@ boolean focusrectangle = false
 end type
 
 type st_cnpj_raiz from statictext within w_indicadores_html_generator
-integer x = 1590
+integer x = 1591
 integer y = 652
 integer width = 640
 integer height = 64
@@ -715,7 +717,7 @@ end type
 type st_top_empresas from statictext within w_indicadores_html_generator
 integer x = 110
 integer y = 912
-integer width = 400
+integer width = 402
 integer height = 64
 integer textsize = -10
 integer weight = 400
@@ -730,9 +732,9 @@ boolean focusrectangle = false
 end type
 
 type st_top_pares from statictext within w_indicadores_html_generator
-integer x = 610
+integer x = 608
 integer y = 912
-integer width = 400
+integer width = 402
 integer height = 64
 integer textsize = -10
 integer weight = 400
